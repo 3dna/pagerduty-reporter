@@ -1,4 +1,4 @@
-#pagerduty-reporter
+# pagerduty-reporter
 
 * Postgres container
 * pd2pg modified to work with v2 of the pagerduty api
