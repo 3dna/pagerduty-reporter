@@ -178,7 +178,7 @@ class PDREPORT
       return
     end
 
-    ### you gotta sit down and read how to utilize ruby maps better than this.  it seems wrong to build an array from a map in order to get unique elements
+    ### this is just ugly and needs to be reworked.
     ug_bad = []
 
     incidents.each{|stfu|
@@ -288,7 +288,7 @@ class PDREPORT
         text += "#{incident}\n"
       }
       puts "#{text}"
-      #send_slack('#sys-eng-notifications', "#{title}", "#{text}")
+      send_slack('#sys-eng-notifications', "#{title}", "#{text}")
     }
   end
 
@@ -305,7 +305,25 @@ class PDREPORT
        fatigue("#{user.to_a[0][1]}", "#{start_date}" , "#{end_date}", 'America/Los_Angeles', true)
      }
   end
+
+  def sysengShift()
+
+    currentTime = DateTime.now
+
+    if currentTime.monday?
+      startTime = (currentTime - 3).to_time
+      shift_report('Ops (SysEng)', startTime, currentTime, true)
+      shift_report('Ops Panic Secondary', startTime, currentTime, true)
+    end
+
+    if currentTime.friday?
+      startTime = (currentTime - 5).to_time
+      shift_report('Ops (SysEng)', startTime, currentTime, true)
+      shift_report('Ops Panic Secondary', startTime, currentTime, true)
+    end
+  end
 end
+
 
 #just ballparking it
 def monthly_report()
@@ -316,56 +334,4 @@ def monthly_report()
   end
 end
 
-#monthly_report
-
-# PDREPORT.new.shift_report('Email Pause', '2018-06-04 12:00:00+00', '2018-06-06 12:00:00 PST', true)
-# PDREPORT.new.shift_report('Incident Management - Primary', '2018-06-04 12:00:00+00', '2018-06-08 12:00:00+00', true)
-# PDREPORT.new.shift_report('Incident Management - Secondary', '2018-06-04 12:00:00+00', '2018-06-06 12:00:00+00', true)
-# PDREPORT.new.shift_report('Labour Election Schedule', '2018-06-04 12:00:00+00', '2018-06-08 12:00:00+00', true)
-# PDREPORT.new.shift_report('NationBuilder Live Back-up', '2018-06-04 12:00:00+00', '2018-06-06 12:00:00+00', true)
-# PDREPORT.new.shift_report('Panic', '2018-06-04 12:00:00+00', '2018-06-08 12:00:00+00', true)
-# PDREPORT.new.shift_report('Panic Secondary', '2018-06-04 12:00:00+00', '2018-06-06 12:00:00+00', true)
-
-# PDREPORT.new.shift_report('SYSENG Business Hours Schedule', '2018-06-04 12:00:00+00', '2018-06-06 12:00:00+00', true)
-# PDREPORT.new.shift_report('Systems Engineering Non-Emergency', '2018-06-04 12:00:00+00', '2018-06-08 12:00:00+00', true)
-
-
-#PDREPORT.new.shift_report('Ops (SysEng)', '2018-06-08 12:00:00+00', '2018-06-011 12:00:00+00', true)
-#PDREPORT.new.shift_report('Ops Panic Secondary', '2018-06-08 12:00:00+00', '2018-06-011 12:00:00+00', true)
-
-
-PDREPORT.new.shift_report('Panic', '2018-06-08 12:00:00+00', '2018-06-011 12:00:00+00', true)
-PDREPORT.new.shift_report('Panic Secondary', '2018-06-08 12:00:00+00', '2018-06-011 12:00:00+00', true)
-
-
-
-
-
-
-
-# PDREPORT.new.shift_report('Ops (SysEng)', '2016-06-04 12:00:00+00', '2018-08-06 12:00:00+00', true)
-# PDREPORT.new.shift_report('Ops Panic Secondary', '2016-06-04 12:00:00+00', '2018-08-06 12:00:00+00', true)
-#puts PDREPORT.new.get_incidents_from_user_id_better('PVNG7WS').map(:incident_id).uniq.count
-
-#PDREPORT.new.check_if_incident_is_between('PM9ALXB','2012-01-01', '2018-06-06')
-#puts PDREPORT.new.get_unique_incidents_from_user_id('PVNG7WS')
-#PDREPORT.new.get_unique_incidents_from_user_id('PVNG7WS').uniq.each{|incident|
-#   #puts "#{incident}"
-#   puts PDREPORT.new.calculate_TTR("#{incident}")
-#}
-
-#PDREPORT.new.calculate_TTR('PM9ALXB').each_cons(2) {|a,b| p "#{a} = #{b}"}
-#monthly_report
-#puts PDREPORT.new.check_off_hours('PM9ALXB')
-#PDREPORT.new.active_company_report('2012-01-01', '2018-06-06')
-#PDREPORT.new.shift_report('Ops (SysEng)', '2015-01-01', '2018-06-06', true)
-#PDREPORT.new.shift_report('Ops Panic Secondary', '2015-01-01', '2018-06-06',true )
-#PDREPORT.new.company_report('2015-01-01', '2018-06-06')
-
-#PDREPORT.new.get_all_historical_user_ids
-
-# PDREPORT.new.report('Panic', 5)
-# PDREPORT.new.report('Panic Secondary', 5)
-
-##Last X days majority of pages (service)
-
+PDREPORT.new.sysengShift()
