@@ -7,3 +7,6 @@
 # Running
 * docker-compose build
 * docker-compose up
+
+# Cron
+0 * * * * /root/pagerduty-reporter/pd2pg/cron_pd2pg.sh
